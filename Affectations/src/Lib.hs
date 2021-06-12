@@ -44,7 +44,7 @@ module Lib(global0,Creneau,Etudiant,Global,nouvelEtudiant,nouveauCreneau,ajouter
     affectesDansCreneau cleCreneau etudiants = IntMap.filter ( affectationCourante >>> (==) (Just cleCreneau)) etudiants
 
     affecterDansCreneau :: CleCreneau -> Etudiant -> Etudiant
-    affecterDansCreneau cleCreneau etudiant@Etudiant{..} = etudiant{affectationCourante = Just cleCreneau, refus = List.delete cleCreneau refus}
+    affecterDansCreneau cleCreneau etudiant@Etudiant{..} = etudiant{affectationCourante = Just cleCreneau}
 
     desaffecter etudiant@Etudiant{..} = case affectationCourante of
         Nothing -> error "double desaffectation"
