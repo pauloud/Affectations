@@ -4,17 +4,9 @@ module Parsing(parserEtudiants,parserCreneaux,parserPrioritaires,fichierVoeux) w
     import qualified Data.ByteString.Lazy as BL
     import Data.Csv
     import qualified Data.Vector as V
-    import Lib
+    import Lib3
 
-    {-enTeteVoeux = header ["Choix 1 TD (nom groupe)"  
-        ,"Choix 1 TD (id groupe)"  
-        ,"Choix 2 TD (nom groupe) "
-        ,"Choix 2 TD (id groupe)"  
-        ,"Choix 3 TD (nom groupe)"
-        ,"Choix 3 TD (id groupe)"  
-        ,"Choix 4 TD (nom groupe)"
-        ,"Choix 4 TD (id groupe)"  
-        ,"Affectation ch1 no aff  hash"]-}
+   
     optionsDecodage = defaultDecodeOptions {
       decDelimiter = 9
     }
@@ -28,8 +20,8 @@ module Parsing(parserEtudiants,parserCreneaux,parserPrioritaires,fichierVoeux) w
                 Right v -> return $ Right $ f <$> V.toList v
 
     parserCreneaux :: FilePath -> IO (Either String [Creneau])
-    parserCreneaux chemin = let f :: (String,String,String,Int) -> Creneau
-                                f(code,_,_,capacite) = nouveauCreneau capacite code 
+    parserCreneaux chemin = let f :: (String,String,Int,Int) -> Creneau
+                                f(code,_,partition,capacite) = nouveauCreneau partition capacite code 
        in do
             donneesCsv <- BL.readFile chemin
             case decodeWith optionsDecodage NoHeader donneesCsv of
@@ -47,7 +39,7 @@ module Parsing(parserEtudiants,parserCreneaux,parserPrioritaires,fichierVoeux) w
                 Right v -> return $ Right $ f <$> V.toList v 
     
     fichierVoeux :: FilePath -> Global -> IO()
-    fichierVoeux chemin global = writeFile chemin $ voeuxCsv global 
+    fichierVoeux chemin global = writeFile chemin $ (showRangDesVoeux global ++ "\n" ++ voeuxCsv global) 
 
 
             
